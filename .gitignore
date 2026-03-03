@@ -1,13 +1,20 @@
-cat << EOF > .gitignore
-# 忽略编译产生的目录
-build/
-
-# 忽略所有对象文件和可执行文件
+# --- 编译产物 ---
 *.o
 *.out
-*.exe
+# 你的可执行文件名
+login
 
-# 忽略临时文件
+# --- 数据库与日志 ---
 *.log
+*.sql
+# 如果你有本地测试用的数据库配置文件（包含明文密码的），也建议加上
+config.secret
+
+# --- 编辑器与系统文件 ---
+.vscode/
+.idea/
+*.swp
 .DS_Store
-EOF
+
+# --- 编译工具产生的临时文件 ---
+Makefile.bak
