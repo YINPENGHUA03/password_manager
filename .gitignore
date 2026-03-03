@@ -1,0 +1,13 @@
+cat << EOF > .gitignore
+# 忽略编译产生的目录
+build/
+
+# 忽略所有对象文件和可执行文件
+*.o
+*.out
+*.exe
+
+# 忽略临时文件
+*.log
+.DS_Store
+EOF
