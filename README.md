@@ -4,7 +4,7 @@
 
 ---
 
-<h2 id="english">🇺🇸 English</h2>
+<h2 id="english"Us English</h2>
 
 This is a lightweight, high-security command-line password management system developed in modern C++. The project integrates cryptographic hashing, secure database management, and multiple robust defense mechanisms against common attack vectors, aiming to provide a hardened local authentication solution.
 
