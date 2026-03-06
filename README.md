@@ -32,10 +32,12 @@ This is a lightweight, high-security command-line password management system dev
 Ensure the following dependencies are installed on your Linux system:
 ```bash
 sudo apt-get install g++ cmake libmysqlclient-dev libssl-dev mysql-server
+```
+
 1. Database Setup
 Log into your MySQL server and set up the database and table:
 
-SQL
+```SQL
 CREATE DATABASE IF NOT EXISTS password_manager_db;
 USE password_manager_db;
 
@@ -47,12 +49,13 @@ CREATE TABLE users (
     fail_count INT DEFAULT 0,
     lock_until DATETIME NULL
 );
+```
 (Note: Please update the database credentials in db.cpp to match your local setup).
 
 2. Build & Run
 Follow the standard CMake out-of-source build process:
 
-Bash
+```Bash
 git clone [https://github.com/YINPENGHUA03/password_manager.git](https://github.com/YINPENGHUA03/password_manager.git)
 cd password_manager
 
@@ -65,6 +68,7 @@ make
 
 # Run the executable
 ./password_manager
+```
 <h2 id="中文">🇨🇳 中文</h2>
 
 这是一个基于现代 C++ 开发的轻量级、高安全性命令行密码管理系统。项目集成了密码学哈希算法、数据库安全管理以及多种防攻击底层机制，旨在提供一个具备防御深度的本地身份认证解决方案。
@@ -99,12 +103,14 @@ make
 前置条件
 确保你的 Linux 系统中已安装以下环境：
 
-Bash
+```Bash
 sudo apt-get install g++ cmake libmysqlclient-dev libssl-dev mysql-server
+```
+
 1. 初始化数据库
 登录本地 MySQL，执行以下 SQL 语句建立必要的表结构：
 
-SQL
+```SQL
 CREATE DATABASE IF NOT EXISTS password_manager_db;
 USE password_manager_db;
 
@@ -116,12 +122,13 @@ CREATE TABLE users (
     fail_count INT DEFAULT 0,
     lock_until DATETIME NULL
 );
+```
 （注意：请确保 db.cpp 中的数据库连接账号密码与你本地环境一致）
 
 2. 编译与运行
 本项目采用标准的 CMake 外部构建流程：
 
-Bash
+```Bash
 git clone [https://github.com/YINPENGHUA03/password_manager.git](https://github.com/YINPENGHUA03/password_manager.git)
 cd password_manager
 
@@ -134,5 +141,5 @@ make
 
 # 运行程序
 ./password_manager
-
+```
 ---
