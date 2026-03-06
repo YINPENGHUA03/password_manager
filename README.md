@@ -38,16 +38,18 @@ sudo apt-get install g++ cmake libmysqlclient-dev libssl-dev mysql-server
 Log into your MySQL server and set up the database and table:
 
 ```SQL
-CREATE DATABASE IF NOT EXISTS password_manager_db;
-USE password_manager_db;
+CREATE DATABASE IF NOT EXISTS login_db;
+USE login_db;
 
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password_hash VARCHAR(64) NOT NULL,
+CREATE TABLE user (
+    id INT NOT NULL AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(128) NOT NULL,
     salt VARCHAR(32) NOT NULL,
-    fail_count INT DEFAULT 0,
-    lock_until DATETIME NULL
+    iter INT NOT NULL DEFAULT 100000,
+    fail_count INT NOT NULL DEFAULT 0,
+    lock_until DATETIME DEFAULT NULL,
+    PRIMARY KEY (id)
 );
 ```
 (Note: Please update the database credentials in db.cpp to match your local setup).
@@ -111,16 +113,18 @@ sudo apt-get install g++ cmake libmysqlclient-dev libssl-dev mysql-server
 登录本地 MySQL，执行以下 SQL 语句建立必要的表结构：
 
 ```SQL
-CREATE DATABASE IF NOT EXISTS password_manager_db;
-USE password_manager_db;
+CREATE DATABASE IF NOT EXISTS login_db;
+USE login_db;
 
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password_hash VARCHAR(64) NOT NULL,
+CREATE TABLE user (
+    id INT NOT NULL AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(128) NOT NULL,
     salt VARCHAR(32) NOT NULL,
-    fail_count INT DEFAULT 0,
-    lock_until DATETIME NULL
+    iter INT NOT NULL DEFAULT 100000,
+    fail_count INT NOT NULL DEFAULT 0,
+    lock_until DATETIME DEFAULT NULL,
+    PRIMARY KEY (id)
 );
 ```
 （注意：请确保 db.cpp 中的数据库连接账号密码与你本地环境一致）
