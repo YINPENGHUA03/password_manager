@@ -1,20 +1,3 @@
-# --- 编译产物 ---
-*.o
-*.out
-# 你的可执行文件名
-login
-
-# --- 数据库与日志 ---
-*.log
-*.sql
-# 如果你有本地测试用的数据库配置文件（包含明文密码的），也建议加上
-config.secret
-
-# --- 编辑器与系统文件 ---
-.vscode/
-.idea/
-*.swp
-.DS_Store
-
-# --- 编译工具产生的临时文件 ---
-Makefile.bak
+build/
+venv/
+__pycache__/
