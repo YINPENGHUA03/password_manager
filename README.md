@@ -16,6 +16,7 @@ This is a high-security password management system that has evolved from a harde
 - **Memory Dump Protection (C++):** Actively wipes sensitive memory (e.g., plaintext passwords) from RAM immediately after use via `OPENSSL_cleanse`.
 - **Modern Full-Stack UI (Vanilla JS):** A sleek, dark/light mode adaptable frontend featuring state-machine form toggling, client-side consistency checks, and a custom `Math.atan2` driven eye-tracking SVG animation.
 - **Persistent Storage:** Uses a MySQL database via the C API with Prepared Statements, managed entirely via the **RAII** paradigm (`std::unique_ptr`) to guarantee **zero memory leaks** and immunity to SQL Injections.
+- **🐳 Cloud-Native Deployment:** Utilizes Docker multi-stage builds to decouple the C++ compilation chain from the production runtime, resulting in an ultra-lean microservice image.
 
 ### 🛠️ Tech Stack
 
@@ -23,21 +24,16 @@ This is a high-security password management system that has evolved from a harde
 - **Backend Service:** Python 3.12, FastAPI, Uvicorn
 - **Frontend:** HTML5, CSS3, ES6 JavaScript (Fetch API)
 - **Database:** MySQL 8.0 (C API)
-- **Build System:** CMake
+- **Build System:** Docker,CMake
 
 ### 🚀 Quick Start
 
 #### 1. Prerequisites
-Ensure the following dependencies are installed on your Linux system:
-```bash
-sudo apt-get update
-sudo apt-get install g++ cmake libmysqlclient-dev libssl-dev mysql-server python3-dev pybind11-dev python3-pip
-```
+Ensure you have a local MySQL server running and create the necessary database and tables using the SQL schema below:
+<details>
+<summary><b>Click to expand: MySQL Database Setup SQL</b></summary>
 
-2. Database Setup
-Log into your MySQL server and execute:
-
-```SQL
+```sql
 CREATE DATABASE IF NOT EXISTS login_db;
 USE login_db;
 
@@ -54,27 +50,52 @@ CREATE TABLE user (
 ```
 (Note: Update the database credentials in db.cpp to match your local setup).
 
+</details>
+Option A: Docker Deployment (Recommended)
+Build and run the highly optimized containerized microservice:
 
-3. Build C++ Core Engine
 ```Bash
 git clone [https://github.com/YINPENGHUA03/password_manager.git](https://github.com/YINPENGHUA03/password_manager.git)
 cd password_manager
 
+# Build the multi-stage Docker image
+docker build -t cpp-auth-gateway:latest .
+
+# Run the container (bridging to host's MySQL via host.docker.internal)
+docker run -d --name auth_server \
+  --add-host=host.docker.internal:host-gateway \
+  -p 8000:8000 \
+  cpp-auth-gateway:latest
+```
+Visit http://localhost:8000 to experience the system.
+
+
+Option B: Manual Local Build
+<details>
+<summary><b>Click to expand: Manual Build Instructions</b></summary>
+1.Install dependencies:
+    
+```Bash
+    sudo apt-get update
+sudo apt-get install g++ cmake libmysqlclient-dev libssl-dev python3-dev pybind11-dev python3-pip python3-venv
+```
+2.Build C++ Engine:
+
+```Bash
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
-
-
-4. Start the Web Microservice
-Return to the project root, install Python dependencies, and launch the server:
-
+3.Run FastAPI Server:
 ```Bash
 cd ..
-pip3 install fastapi uvicorn pydantic --break-system-packages
+python3 -m venv venv
+source venv/bin/activate
+pip install fastapi uvicorn pydantic
 uvicorn server:app --host 0.0.0.0 --port 8000
-Open your browser and navigate to http://localhost:8000 to experience the system.
 ```
+</details>
+
 
 <h2 id="中文">🇨🇳 中文</h2>
 
@@ -93,6 +114,8 @@ Open your browser and navigate to http://localhost:8000 to experience the system
 
 资源级数据库安全：采用 MySQL 预处理语句 (Prepared Statements) 杜绝 SQL 注入，并全面践行 RAII 机制，利用 std::unique_ptr 封装 C API 资源，实现 0 内存泄漏。
 
+🐳 云原生集装箱化：采用 Docker 多阶段构建 (Multi-stage Build) 技术，彻底剥离 C++ 编译链与运行期环境，打造超轻量级、开箱即用的工业级微服务镜像。
+
 🛠️ 技术栈
 底层引擎: C++17, OpenSSL (libcrypto), pybind11
 
@@ -102,20 +125,13 @@ Open your browser and navigate to http://localhost:8000 to experience the system
 
 数据库: MySQL 8.0 (C API)
 
-构建工具: CMake
+构建工具: Docker,CMake
 
 🚀 快速开始
-1. 前置条件
-确保系统中已安装必要的编译链与开发库：
+首先，请确保本地 MySQL 服务已启动，并执行以下 SQL 初始化数据库与表结构：
 
-```Bash
-sudo apt-get update
-sudo apt-get install g++ cmake libmysqlclient-dev libssl-dev mysql-server python3-dev pybind11-dev python3-pip
-```
-
-
-2. 初始化数据库
-登录 MySQL 并执行建表语句：
+<details>
+<summary><b>点击展开：MySQL 数据库建表语句</b></summary>
 
 ```SQL
 CREATE DATABASE IF NOT EXISTS login_db;
@@ -132,27 +148,51 @@ CREATE TABLE user (
     PRIMARY KEY (id)
 );
 ```
-（注意：请确保 db.cpp 中的数据库连接账号密码与本地环境一致）
+（注意：请确保 db.cpp 中的数据库连接账号密码与本地环境一致，Docker 部署需使用 host.docker.internal）。
 
+</details>
 
-3. 编译 C++ 核心引擎
+方案 A：Docker 容器化部署（推荐）
+一键构建并运行经过极致瘦身的微服务镜像：
 ```Bash
 git clone [https://github.com/YINPENGHUA03/password_manager.git](https://github.com/YINPENGHUA03/password_manager.git)
 cd password_manager
 
+# 构建多阶段 Docker 镜像
+docker build -t cpp-auth-gateway:latest .
+
+# 启动容器（利用 host.docker.internal 穿透访问宿主机数据库）
+docker run -d --name auth_server \
+  --add-host=host.docker.internal:host-gateway \
+  -p 8000:8000 \
+  cpp-auth-gateway:latest
+```
+在浏览器中访问 http://localhost:8000 即可体验系统。
+
+方案 B：本地源码编译运行
+<details>
+<summary><b>点击展开：传统本地编译指南</b></summary>
+1.安装基础编译环境：
+    
+```Bash
+sudo apt-get update
+sudo apt-get install g++ cmake libmysqlclient-dev libssl-dev python3-dev pybind11-dev python3-pip python3-venv
+```
+
+2.编译 C++ 核心引擎：
+
+```Bash
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 
-
-4. 启动 Web 微服务
-回到项目根目录，安装 Python 依赖并启动后端服务器：
-
+3.启动 FastAPI 服务：
 ```Bash
 cd ..
-pip3 install fastapi uvicorn pydantic --break-system-packages
+python3 -m venv venv
+source venv/bin/activate
+pip install fastapi uvicorn pydantic
 uvicorn server:app --host 0.0.0.0 --port 8000
 ```
-
-在浏览器中访问 http://localhost:8000 即可体验系统。
+</details>
