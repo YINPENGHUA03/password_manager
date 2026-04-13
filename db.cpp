@@ -33,7 +33,7 @@ Database::Database(){
 		return;
 	}
 
-	if(!mysql_real_connect(conn,"localhost","root","060410","login_db",0,nullptr,0)){
+	if(!mysql_real_connect(conn,"host.docker.internal","root","060410","login_db",0,nullptr,0)){
 		std::cerr << "connect failed:" << mysql_error(conn) << "\n";
 		mysql_close(conn);
                 conn = nullptr; // 连接失败时，把指针设为空
